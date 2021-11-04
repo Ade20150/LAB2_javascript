@@ -11,6 +11,7 @@ function Bear() {
     this.display();
   };
   this.display = function () {
+    this.fitBounds();
     this.htmlElement.style.left = this.x + "px";
     this.htmlElement.style.top = this.y + "px";
     this.htmlElement.style.display = "absolute";
@@ -102,8 +103,8 @@ class Bee {
     };
   }
 }
-function getRandomInt(6) {
-  return Math.floor(Math.random * 6);
+function getRandomInt(max) {
+  return Math.floor(Math.random * max);
 }
 function createBeeImg(wNum) {
   //get dimension and position of board div
