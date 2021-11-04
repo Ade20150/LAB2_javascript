@@ -76,6 +76,7 @@ class Bee {
     this.x = this.htmlElement.offsetLeft; //the top position (y)
     this.y = this.htmlElement.offsetTop;
     this.move = function (dx, dy) {
+      this.fitBounds();
       //move the bees by dx, dy
       this.x += dx;
       this.y += dy;
@@ -104,7 +105,7 @@ class Bee {
   }
 }
 function getRandomInt(max) {
-  return Math.floor(Math.random * max);
+  return Math.floor(Math.random() * max);
 }
 function createBeeImg(wNum) {
   //get dimension and position of board div
@@ -162,7 +163,7 @@ function makeBees() {
     // update loop for game //move the bees randomly
     moveBees();
     //use a fixed update period
-    let period = document.getElementById(periodTimer).value; //modify this to control refresh period
+    let period = document.getElementById("periodTimer").value; //modify this to control refresh period
     //update the timer for the next move
     updateTimer = setTimeout("updateBees()", period);
     if (Number(score) > 1000) {
