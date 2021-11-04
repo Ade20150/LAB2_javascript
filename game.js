@@ -31,10 +31,17 @@ function Bear() {
   };
 }
 function start() {
+  score = 0;
+  hits.innerHTML = score;
+  longestDuration = 0;
+  document.getElementById("duration").innerHTML = longestDuration;
+  nbBees = 1;
+  nbBees = document.getElementById("nbBees").value;
   //create bear
-  Bear = new Bear();
+  bear = new Bear();
   //add an event listener to keypress event
   document.addEventListener("keydown", moveBear, false);
+  lastStingTime = new Date();
   //create new array for bees
   bees = new Array();
   //create bees
@@ -43,7 +50,7 @@ function start() {
   updateBees();
 }
 function setSpeed() {
-  Bear.dBear = document.getElementById("BearSpeed").value;
+  bear.dBear = document.getElementById("BearSpeed").value;
 }
 // Handle keyboad events
 // to move the bear
@@ -54,16 +61,16 @@ function moveBear(e) {
   const KEYLEFT = 37;
   const KEYRIGHT = 39;
   if (e.keyCode == KEYRIGHT) {
-    Bear.move(1, 0);
+    bear.move(1, 0);
   } // right key
   if (e.keyCode == KEYLEFT) {
-    Bear.move(-1, 0);
+    bear.move(-1, 0);
   } // left key
   if (e.keyCode == KEYUP) {
-    Bear.move(0, -1);
+    bear.move(0, -1);
   } // up key
   if (e.keyCode == KEYDOWN) {
-    Bear.move(0, 1);
+    bear.move(0, 1);
   } // down key
 }
 class Bee {
@@ -90,7 +97,8 @@ class Bee {
       this.htmlElement.style.display = "block";
     };
     this.fitBounds = function () {
-      //check and make sure the bees stays in the board space let parent = this.htmlElement.parentElement;
+      //check and make sure the bees stays in the board space
+      let parent = this.htmlElement.parentElement;
       let iw = this.htmlElement.offsetWidth;
       let ih = this.htmlElement.offsetHeight;
       let l = parent.offsetLeft;
@@ -154,6 +162,7 @@ function makeBees() {
 }
 function moveBees() {
   let speed = document.getElementById("speedBees").value; //move each bee to a random location
+
   for (let i = 0; i < bees.length; i++) {
     let dx = getRandomInt(2 * speed) - speed;
     let dy = getRandomInt(2 * speed) - speed;
@@ -165,11 +174,10 @@ function moveBees() {
 function updateBees() {
   // update loop for game //move the bees randomly
   moveBees();
-
   //use a fixed update period
   let period = document.getElementById("periodTimer").value; //modify this to control refresh period
   //update the timer for the next move
-  updateTimer = setTimeout(updateBees(), period);
+  updateTimer = setTimeout("updateBees()", period);
 }
 
 function isHit(defender, offender) {
@@ -177,9 +185,25 @@ function isHit(defender, offender) {
     //check if the two image overlap
     let score = hits.innerHTML;
     score = Number(score) + 1; //increment the score
-    hits.innerHTML = score; //display the new score }
+    hits.innerHTML = score; //display the new score
+    let newStingTime = new Date();
+    let thisDuration = newStingTime - lastStingTime;
+    lastStingTime = newStingTime;
+    let longestDuration = Number(duration.innerHTML);
+    if (longestDuration == 0) {
+      longestDuration = thisDuration;
+    } else {
+      if (longestDuration < thisDuration) longestDuration = thisDuration;
+      document.getElementById("duration").innerHTML = longestDuration;
+    }
+  }
+  if (hits.innerHTML == 1000) {
+    clearTimeout(updateTimer);
+    hits.innerHTML = 0;
+    alert("the game is over. Your best duration is: " + longestDuration);
   }
 }
+
 function overlap(element1, element2) {
   //consider the two rectangles wrapping the two elements //rectangle of the first element
   left1 = element1.htmlElement.offsetLeft;
